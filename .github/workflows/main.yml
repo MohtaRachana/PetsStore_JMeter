@@ -20,8 +20,9 @@ jobs:
         java-version: '11'
 
     - name: Run JMeter test
+      shell: cmd
       run: |
-        C:\\Users\\RachanaMohta\\Downloads\\apache-jmeter-5.6.3\\apache-jmeter-5.6.3\\bin\\jmeter.bat -n -t C:\\Users\\RachanaMohta\\Downloads\\apache-jmeter-5.6.3\\apache-jmeter-5.6.3\\bin\\petsStore.jmx -l C:\\Users\\RachanaMohta\\Downloads\\result.jtl -JcsvFile1=C:\\Users\\RachanaMohta\\Desktop\\petsLogin.csv -JcsvFile2=C:\\Users\\RachanaMohta\\Desktop\\pets.csv
+        call "C:\\Users\\RachanaMohta\\Downloads\\apache-jmeter-5.6.3\\bin\\jmeter.bat" -n -t "C:\\Users\\RachanaMohta\\Downloads\\apache-jmeter-5.6.3\\bin\\petsStore.jmx" -l "C:\\Users\\RachanaMohta\\Downloads\\result.jtl" -JcsvFile1="C:\\Users\\RachanaMohta\\Desktop\\petsLogin.csv" -JcsvFile2="C:\\Users\\RachanaMohta\\Desktop\\pets.csv"
         
     - name: Upload Test Results
       uses: actions/upload-artifact@v2

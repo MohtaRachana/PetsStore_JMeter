@@ -26,11 +26,17 @@ jobs:
       - name: Create reports directory
         run: mkdir -p reports/html
 
-      - name: JMeter Test
-        run: $HOME/apache-jmeter/bin/jmeter -n -t petsStore.jmx -l result.jtl
+      - name: Run JMeter Test
+        run: |
+          $HOME/apache-jmeter/bin/jmeter -n -t petsStore.jmx -l result.jtl
+          echo "JMeter test completed. Result file contents:"
+          cat result.jtl
 
       - name: Generate HTML Report
-        run: $HOME/apache-jmeter/bin/jmeter -g result.jtl -o ./reports/html/
+        run: |
+          $HOME/apache-jmeter/bin/jmeter -g result.jtl -o reports/html/
+          echo "HTML Report generated. List of files in reports/html:"
+          ls -la reports/html
 
       - name: Upload Results
         uses: actions/upload-artifact@v3

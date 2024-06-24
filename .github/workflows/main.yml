@@ -21,18 +21,20 @@ jobs:
         run: |
           wget -q https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-5.4.1.tgz
           tar -xzf apache-jmeter-5.4.1.tgz
-          mv apache-jmeter-5.4.1 $HOME/apache-jmeter
+          mv apache-jmeter-5.4.1 jmeter
           rm apache-jmeter-5.4.1.tgz
           chmod +x $HOME/apache-jmeter/bin/jmeter
  
-      - name: Create reports directory
-        run: mkdir -p reports/html
+     # - name: Create reports directory
+      #  run: mkdir -p reports/html
  
-      - name: JMeter Test
-        run: $HOME/apache-jmeter/bin/jmeter -n -t petsStore.jmx -l result.jtl
+      - name: Run JMeter Test
+        run: |
+         jmeter/bin/jmeter -n -t petsStore.jmx -l result.jtl -JcsvFile1=petsLogin.csv -JcsvFile2=pets.csv
  
       - name: Generate HTML Report
-        run: $HOME/apache-jmeter/bin/jmeter -g result.jtl -o ./reports/html/
+        run: |
+         jmeter/bin/jmeter -g result.jtl -o report
  
       - name: Upload Results
         uses: actions/upload-artifact@v3
@@ -44,6 +46,6 @@ jobs:
       - name: Upload HTML Reports
         uses: actions/upload-artifact@v3
         with:
-          name: jmeter-html-reports
-          path: reports/html
-          if-no-files-found: error
+          name: jmeter-html-report
+          path: report
+          

@@ -29,7 +29,7 @@ jobs:
  
       - name: Run JMeter Test
         run: |
-         jmeter/bin/jmeter -n -t petsStore.jmx -l result.jtl -JcsvFile1=petsLogin.csv -JcsvFile2=pets.csv
+         jmeter/bin/jmeter.bat -n -t C:/Users/RachanaMohta/Downloads/apache-jmeter-5.6.3/apache-jmeter-5.6.3/bin/petsStore.jmx -l C:/Users/RachanaMohta/Downloads/result.jtl -JcsvFile1=Desktop/petsLogin.csv -JcsvFile2=Desktop/pets.csv
  
       - name: Generate HTML Report
         run: |

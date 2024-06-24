@@ -28,8 +28,8 @@ jobs:
 
       - name: Copy CSV files
         run: |
-          cp "/mnt/c/Users/RachanaMohta/Desktop/petsLogin.csv" $HOME/apache-jmeter/bin/petsLogin.csv
-          cp "/mnt/c/Users/RachanaMohta/Desktop/pets.csv" $HOME/apache-jmeter/bin/pets.csv
+          cp "C:/Users/RachanaMohta/Desktop/petsLogin.csv" $HOME/apache-jmeter/bin/petsLogin.csv
+          cp "C:/Users/RachanaMohta/Desktop/pets.csv" $HOME/apache-jmeter/bin/pets.csv
 
       - name: JMeter Test
         run: $HOME/apache-jmeter/bin/jmeter -n -t petsStore.jmx -l result.jtl -JcsvFile1=$HOME/apache-jmeter/bin/petsLogin.csv -JcsvFile2=$HOME/apache-jmeter/bin/pets.csv

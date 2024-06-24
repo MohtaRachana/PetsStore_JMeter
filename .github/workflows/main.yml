@@ -1,32 +1,52 @@
-name: JMeter Test
+name: CI
 
 on:
   push:
-    branches:
-      - main  # Adjust as needed
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
 
 jobs:
-  run-jmeter-test:
-    runs-on: windows-latest
-    
+  build:
+    runs-on: ubuntu-latest
+
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Set up JDK 11
-      uses: actions/setup-java@v2
-      with:
-        distribution: 'adopt'
-        java-version: '11'
+      - name: Install Apache JMeter
+        run: |
+          wget -q https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-5.4.1.tgz
+          tar -xzf apache-jmeter-5.4.1.tgz
+          mv apache-jmeter-5.4.1 $HOME/apache-jmeter
+          rm apache-jmeter-5.4.1.tgz
+          chmod +x $HOME/apache-jmeter/bin/jmeter
 
-    - name: Run JMeter test
-      shell: cmd
-      run: |
-        cd "C:\Users\RachanaMohta\Downloads\apache-jmeter-5.6.3\bin"
-        jmeter.bat -n -t "C:\Users\RachanaMohta\Downloads\apache-jmeter-5.6.3\bin\petsStore.jmx" -l "C:\Users\RachanaMohta\Downloads\result.jtl" -JcsvFile1="C:\Users\RachanaMohta\Desktop\petsLogin.csv" -JcsvFile2="C:\Users\RachanaMohta\Desktop\pets.csv"
-        
-    - name: Upload Test Results
-      uses: actions/upload-artifact@v2
-      with:
-        name: jmeter-results
-        path: C:\Users\RachanaMohta\Downloads\result.jtl
+      - name: Create reports directory
+        run: mkdir -p reports/html
+
+      - name: Copy CSV files
+        run: |
+          cp "/mnt/c/Users/RachanaMohta/Desktop/petsLogin.csv" $HOME/apache-jmeter/bin/petsLogin.csv
+          cp "/mnt/c/Users/RachanaMohta/Desktop/pets.csv" $HOME/apache-jmeter/bin/pets.csv
+
+      - name: JMeter Test
+        run: $HOME/apache-jmeter/bin/jmeter -n -t petsStore.jmx -l result.jtl -JcsvFile1=$HOME/apache-jmeter/bin/petsLogin.csv -JcsvFile2=$HOME/apache-jmeter/bin/pets.csv
+
+      - name: Generate HTML Report
+        run: $HOME/apache-jmeter/bin/jmeter -g result.jtl -o ./reports/html/
+
+      - name: Upload Results
+        uses: actions/upload-artifact@v3
+        with:
+          name: jmeter-results
+          path: result.jtl
+          if-no-files-found: error
+
+      - name: Upload HTML Reports
+        uses: actions/upload-artifact@v3
+        with:
+          name: jmeter-html-reports
+          path: reports/html
+          if-no-files-found: error
